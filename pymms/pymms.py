@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""py-mms init
+"""py-mms main class
 
- PY-MMS : Main Package Init
- ==========================
+ PY-MMS : Main Package Class
+ ===========================
 
  Copyright 2020 MET Norway
 
@@ -19,9 +19,16 @@
  limitations under the License.
 """
 
-from .pymms import PyMMS
+class PyMMS():
+    """Main wrapper class for the MMS Go client.
+    """
 
-__package__ = "pymms"
-__version__ = "0.0.1"
+    def __init__(self):
+        return
 
-__all__ = ["PyMMS"]
+    def helloWorld(self):
+        """Dummy function for setting up the test framework.
+        """
+        return True
+
+# END Class PyMMS
