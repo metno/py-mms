@@ -1,0 +1,21 @@
+name: Python 3.6 Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  checkSyntax:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Python Setup
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.6
+          architecture: x64
+      - name: Checkout py-mms
+        uses: actions/checkout@v2
+      - name: Run Tests
+        run: pytest -v
