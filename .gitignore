@@ -1,3 +1,7 @@
 # Python
 .pyc
 __pycache__
+
+# Pytest
+.pytest_cache
+tests/temp/

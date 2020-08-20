@@ -26,4 +26,9 @@ class PyMMS():
     def __init__(self):
         return
 
+    def helloWorld(self):
+        """Dummy function for setting up the test framework.
+        """
+        return True
+
 # END Class PyMMS
