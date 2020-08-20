@@ -7,6 +7,6 @@ import pytest
 from pymms import PyMMS
 
 @pytest.mark.core
-def testConfigInit(ptTemp):
+def testConfigInit():
     tObj = PyMMS()
     assert tObj.helloWorld()
