@@ -2,13 +2,13 @@
 """Core object tests.
 """
 
-import os
 import pytest
 
 from pymms import PyMMS
 
 @pytest.mark.core
-def testConfigInit():
+def testConfigInit(goLib):
+    assert goLib
     tObj = PyMMS()
     assert tObj.helloWorld()
 
