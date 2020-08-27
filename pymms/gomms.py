@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""py-mms main class
+"""py-mms go wrapper class
 
- PY-MMS : Main Package Class
- ===========================
+ PY-MMS : Wrapper Class for GO-MMS
+ ==================================
 
  Copyright 2020 MET Norway
 
@@ -19,25 +19,29 @@
  limitations under the License.
 """
 
+import ctypes
 import logging
 
-from .gomms import GoMMS
+from os import path
+
+from . import _CONFIG
 
 logger = logging.getLogger(__name__)
 
-class PyMMS():
-    """Main wrapper class for the MMS Go client.
+class GoMMS():
+    """Main wrapper class for the Go library.
     """
+
+    LIB_NAME = "libdummy.so"
 
     def __init__(self):
 
-        self.goMMS = GoMMS()
+        self.goLib = ctypes.CDLL(path.join(_CONFIG.libPath, self.LIB_NAME))
+        logger.debug("Linked library '%s'" % self.LIB_NAME)
 
         return
 
-    def helloWorld(self):
-        """Dummy function for setting up the test framework.
-        """
-        return True
+    def doubleIt(self, intVal):
+        return self.goLib.DoubleIt(intVal)
 
-# END Class PyMMS
+# END Class GoMMS

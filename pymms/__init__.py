@@ -19,9 +19,37 @@
  limitations under the License.
 """
 
-from .pymms import PyMMS
+import os
+import logging
+
+from .config import Config
+
+# Create Config object before initialising any other classes as they
+# depend on the Config object.
+_CONFIG = Config()
+
+from .pymms import PyMMS # noqa: E402
 
 __package__ = "pymms"
 __version__ = "0.0.1"
 
 __all__ = ["PyMMS"]
+
+# Initiating logging
+strLevel = os.environ.get("PYMMS_LOGLEVEL", "INFO")
+if hasattr(logging, strLevel):
+    logLevel = getattr(logging, strLevel)
+else:
+    print("Invalid logging level '%s' in environment variable PYMMS_LOGLEVEL" % strLevel)
+    logLevel = logging.INFO
+
+if logLevel < logging.INFO:
+    logFormat = "[{asctime:s}] {levelname:8s} {message:}"
+else:
+    logFormat = "{levelname:8s} {message:}"
+
+logging.basicConfig(format=logFormat, style="{", level=logLevel)
+logger = logging.getLogger(__name__)
+
+# Initialise Config
+_CONFIG.initConfig()
