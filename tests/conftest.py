@@ -2,7 +2,7 @@
 """Test Config
 """
 
+import os
 import sys
-from os import path
 
-sys.path.insert(1, path.abspath(path.join(path.dirname(__file__), path.pardir)))
+sys.path.insert(1, os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))

@@ -10,3 +10,8 @@ from pymms import PyMMS
 def testConfigInit():
     tObj = PyMMS()
     assert tObj.helloWorld()
+
+@pytest.mark.core
+def testDummyGoInterface():
+    tObj = PyMMS()
+    assert tObj.goMMS.doubleIt(21) == 42

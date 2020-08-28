@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""py-mms main class
+"""py-mms config class
 
- PY-MMS : Main Package Class
- ===========================
+ PY-MMS : Package Config Class
+ ==============================
 
  Copyright 2020 MET Norway
 
@@ -19,25 +19,33 @@
  limitations under the License.
 """
 
+import sys
 import logging
 
-from .gomms import GoMMS
+from os import path
 
 logger = logging.getLogger(__name__)
 
-class PyMMS():
-    """Main wrapper class for the MMS Go client.
+class Config():
+    """Main config object for the package.
     """
 
     def __init__(self):
 
-        self.goMMS = GoMMS()
+        self.pkgPath = None
+        self.libPath = None
 
         return
 
-    def helloWorld(self):
-        """Dummy function for setting up the test framework.
+    def initConfig(self):
+        """Initialise the config variables.
         """
-        return True
+        self.pkgPath = getattr(sys, "_MEIPASS", path.abspath(path.dirname(__file__)))
+        self.libPath = path.join(self.pkgPath, "lib")
 
-# END Class PyMMS
+        logger.debug("Package path is %s" % self.pkgPath)
+        logger.debug("Library path is %s" % self.libPath)
+
+        return
+
+# END Class Config
