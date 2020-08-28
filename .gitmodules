@@ -1,0 +1,3 @@
+[submodule "pymms/lib/go-mms"]
+	path = pymms/lib/go-mms
+	url = https://github.com/metno/go-mms.git
