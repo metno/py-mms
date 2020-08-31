@@ -19,10 +19,12 @@
  limitations under the License.
 """
 
+import json
 import ctypes
 import logging
 
 from os import path
+from random import randint
 
 from . import _CONFIG
 
@@ -41,7 +43,27 @@ class GoMMS():
 
         return
 
-    def doubleIt(self, intVal):
-        return self.goLib.PyHello(intVal)
+    def postEvent(self):
+        """Post an event to the MMS client.
+        """
+        payLoad = {"A": 0}
+        self.goLib.PyPostEvent.restype = ctypes.c_char_p
+        retData = self.goLib.PyPostEvent(ctypes.c_char_p(json.dumps(payLoad).encode()))
+        print("Python received message:")
+        print(json.loads(retData.decode()))
+        return True
+
+    def sayHello(self):
+        """Function to check that the interface to the go-mms client is
+        working. Should always return the double of the value sent.
+        """
+        intVal = randint(1, 100)
+        retVal = self.goLib.PyHello(intVal)
+        isOk = retVal == 2*intVal
+        if isOk:
+            logger.debug("Testing go-mms interface: OK")
+        else:
+            logger.error("Testing go-mms interface: Failed")
+        return isOk
 
 # END Class GoMMS

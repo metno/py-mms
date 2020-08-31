@@ -14,4 +14,9 @@ def testConfigInit():
 @pytest.mark.core
 def testDummyGoInterface():
     tObj = PyMMS()
-    assert tObj.goMMS.doubleIt(21) == 42
+    assert tObj.goMMS.sayHello()
+
+@pytest.mark.core
+def testPostEvent():
+    tObj = PyMMS()
+    assert tObj.goMMS.postEvent()
