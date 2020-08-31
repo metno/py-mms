@@ -32,7 +32,7 @@ class GoMMS():
     """Main wrapper class for the Go library.
     """
 
-    LIB_NAME = "libdummy.so"
+    LIB_NAME = "libgomms.so"
 
     def __init__(self):
 
@@ -42,6 +42,6 @@ class GoMMS():
         return
 
     def doubleIt(self, intVal):
-        return self.goLib.DoubleIt(intVal)
+        return self.goLib.PyHello(intVal)
 
 # END Class GoMMS
