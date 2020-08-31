@@ -24,7 +24,6 @@ import ctypes
 import logging
 
 from os import path
-from random import randint
 
 from . import _CONFIG
 
@@ -49,21 +48,23 @@ class GoMMS():
         payLoad = {"A": 0}
         self.goLib.PyPostEvent.restype = ctypes.c_char_p
         retData = self.goLib.PyPostEvent(ctypes.c_char_p(json.dumps(payLoad).encode()))
+        print(id(retData))
+        retDecode = retData.decode()
+        del retData
+        print(id(retDecode))
+        retDict = json.loads(retDecode)
         print("Python received message:")
-        print(json.loads(retData.decode()))
+        print(retDict)
         return True
 
     def sayHello(self):
         """Function to check that the interface to the go-mms client is
         working. Should always return the double of the value sent.
         """
-        intVal = randint(1, 100)
-        retVal = self.goLib.PyHello(intVal)
-        isOk = retVal == 2*intVal
-        if isOk:
-            logger.debug("Testing go-mms interface: OK")
-        else:
-            logger.error("Testing go-mms interface: Failed")
-        return isOk
+        self.goLib.SayHello.restype = ctypes.c_char_p
+        retByte = self.goLib.SayHello(ctypes.c_char_p("Hello Go!".encode()))
+        retString = retByte.decode()
+        print("Go says: %s" % retString)
+        return retString
 
 # END Class GoMMS
