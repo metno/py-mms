@@ -42,18 +42,19 @@ class GoMMS():
 
         return
 
-    def postEvent(self):
+    def productEvent(self, product, productSlug, productionHub):
         """Post an event to the MMS client.
         """
-        payLoad = {"A": 0}
-        self.goLib.PyPostEvent.restype = ctypes.c_char_p
-        retData = self.goLib.PyPostEvent(ctypes.c_char_p(json.dumps(payLoad).encode()))
-        print(id(retData))
-        retDecode = retData.decode()
-        del retData
-        print(id(retDecode))
-        retDict = json.loads(retDecode)
-        print("Python received message:")
+        payLoad = json.dumps({
+            "Product":       str(product),
+            "ProductSlug":   str(productSlug),
+            "ProductionHub": str(productionHub),
+        })
+        print(payLoad)
+        self.goLib.PyProductEvent.restype = ctypes.c_char_p
+        retData = self.goLib.PyProductEvent(payLoad.encode()).decode()
+        retDict = json.loads(retData)
+        print("Python received message: %s")
         print(retDict)
         return True
 
@@ -61,8 +62,8 @@ class GoMMS():
         """Function to check that the interface to the go-mms client is
         working. Should always return the double of the value sent.
         """
-        self.goLib.SayHello.restype = ctypes.c_char_p
-        retByte = self.goLib.SayHello(ctypes.c_char_p("Hello Go!".encode()))
+        self.goLib.PySayHello.restype = ctypes.c_char_p
+        retByte = self.goLib.PySayHello(b"Hello Go!")
         retString = retByte.decode()
         print("Go says: %s" % retString)
         return retString

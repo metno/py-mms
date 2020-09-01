@@ -15,8 +15,10 @@ def testConfigInit():
 def testGoInterface():
     tObj = PyMMS()
     assert tObj.goMMS.sayHello() == "Hello Python!"
+    assert False
 
 @pytest.mark.core
-def testPostEvent():
+def testProductEvent():
     tObj = PyMMS()
-    assert tObj.goMMS.postEvent()
+    assert tObj.goMMS.productEvent("A", "B", "C")
+    assert False
