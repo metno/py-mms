@@ -33,7 +33,7 @@ class GoMMS():
     """Main wrapper class for the Go library.
     """
 
-    LIB_NAME = "libgomms.so"
+    LIB_NAME = "libmms.so"
 
     def __init__(self):
 
