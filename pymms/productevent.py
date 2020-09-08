@@ -29,14 +29,14 @@ class ProductEvent():
     """Wrapper class for the go-mms product event.
     """
 
-    def __init__(self):
+    def __init__(self, product="", productSlug="", productionHub=""):
 
         self.goMMS = GoMMS()
 
         # Event properties
-        self._eventProduct = ""
-        self._eventProductSlug = ""
-        self._eventProductionHub = ""
+        self._eventProduct = product
+        self._eventProductSlug = productSlug
+        self._eventProductionHub = productionHub
 
         return
 
