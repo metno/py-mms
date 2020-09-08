@@ -31,7 +31,7 @@ class ProductEvent():
 
     def __init__(self, product="", productSlug="", productionHub=""):
 
-        self.goMMS = GoMMS()
+        self._goMMS = GoMMS()
 
         # Event properties
         self._eventProduct = product
@@ -86,5 +86,17 @@ class ProductEvent():
             self._eventProductionHub = ""
             raise ValueError("ProductEvent.productionHub must be a string")
         return
+
+    ##
+    #  Methods
+    ##
+
+    def send(self):
+        self._goMMS.productEvent(
+            product=self._eventProduct,
+            productSlug=self._eventProductSlug,
+            productionHub=self._eventProductionHub
+        )
+        return True
 
 # END Class ProductEvent
