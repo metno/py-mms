@@ -65,7 +65,7 @@ class GoMMS():
         # print("Python received message:")
         # print(retDict)
 
-        return True
+        return retDict
 
     def sayHello(self):
         """Function to check that the interface to the go-mms client is

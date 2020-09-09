@@ -2,7 +2,7 @@
 """py-mms product event
 
  PY-MMS : Product Event Class
- =============================
+ ============================
 
  Copyright 2020 MET Norway
 
@@ -92,11 +92,14 @@ class ProductEvent():
     ##
 
     def send(self):
-        self._goMMS.productEvent(
+        """Bundle the event data and send to the GoMMS library. Returns
+        a dictionary of the response from go-mms.
+        """
+        retData = self._goMMS.productEvent(
             product=self._eventProduct,
             productSlug=self._eventProductSlug,
             productionHub=self._eventProductionHub
         )
-        return True
+        return retData
 
 # END Class ProductEvent
