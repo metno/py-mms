@@ -25,6 +25,8 @@ jobs:
       - name: Checkout py-mms
         uses: actions/checkout@v2
       - name: Build Shared Library
-        run: ./makeLib.sh
+        run: |
+          git submodule update --init
+          ./makeLib.sh
       - name: Run Tests
         run: pytest -v --cov=pymms
