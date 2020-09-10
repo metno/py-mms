@@ -29,11 +29,12 @@ from .config import Config
 _CONFIG = Config()
 
 from .pymms import PyMMS # noqa: E402
+from .productevent import ProductEvent # noqa: E402
 
 __package__ = "pymms"
 __version__ = "0.0.1"
 
-__all__ = ["PyMMS"]
+__all__ = ["PyMMS", "ProductEvent"]
 
 # Initiating logging
 strLevel = os.environ.get("PYMMS_LOGLEVEL", "INFO")

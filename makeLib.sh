@@ -1,4 +1,5 @@
 #!/bin/bash
 
-cd pymms/lib
-go build -o libdummy.so -buildmode=c-shared ./go-dummy
+cd pymms/lib/go-mms
+go build -o libmms.so -buildmode=c-shared ./export
+mv libmms.* ../

@@ -12,6 +12,7 @@ def testConfigInit():
     assert tObj.helloWorld()
 
 @pytest.mark.core
-def testDummyGoInterface():
+def testGoInterface():
     tObj = PyMMS()
-    assert tObj.goMMS.doubleIt(21) == 42
+    assert tObj.goMMS.sayHello() == "Hello Python!"
+    # assert False

@@ -19,12 +19,14 @@
  limitations under the License.
 """
 
+import json
 import ctypes
 import logging
 
 from os import path
 
 from . import _CONFIG
+from .exceptions import MMSError
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +34,7 @@ class GoMMS():
     """Main wrapper class for the Go library.
     """
 
-    LIB_NAME = "libdummy.so"
+    LIB_NAME = "libmms.so"
 
     def __init__(self):
 
@@ -41,7 +43,38 @@ class GoMMS():
 
         return
 
-    def doubleIt(self, intVal):
-        return self.goLib.DoubleIt(intVal)
+    def productEvent(self, product, productSlug, productionHub):
+        """Post an event to the MMS client.
+        """
+        payLoad = json.dumps({
+            "Product":       str(product),
+            "ProductSlug":   str(productSlug),
+            "ProductionHub": str(productionHub),
+        })
+        self.goLib.PyProductEvent.restype = ctypes.c_char_p
+        retData = self.goLib.PyProductEvent(payLoad.encode()).decode()
+        retDict = json.loads(retData)
+
+        if "err" in retDict and "errmsg" in retDict:
+            if retDict["err"]:
+                errMsg = retDict["errmsg"].replace(": ", ":\n")
+                raise MMSError("\n%s" % errMsg.strip())
+        else:
+            raise MMSError("Invalid return data from libmms.so")
+
+        # print("Python received message:")
+        # print(retDict)
+
+        return retDict
+
+    def sayHello(self):
+        """Function to check that the interface to the go-mms client is
+        working. Should always return the double of the value sent.
+        """
+        self.goLib.PySayHello.restype = ctypes.c_char_p
+        retByte = self.goLib.PySayHello(b"Hello Go!")
+        retString = retByte.decode()
+        print("Go says: %s" % retString)
+        return retString
 
 # END Class GoMMS
