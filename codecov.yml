@@ -1,4 +1,3 @@
-
 codecov:
   require_ci_to_pass: yes
 
@@ -15,5 +14,13 @@ coverage:
       default:
         threshold: 1%
     changes: no
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
 
 comment: false
