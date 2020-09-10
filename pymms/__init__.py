@@ -30,27 +30,41 @@ _CONFIG = Config()
 
 from .pymms import PyMMS # noqa: E402
 from .productevent import ProductEvent # noqa: E402
+from .exceptions import MMSError # noqa: E402
 
 __package__ = "pymms"
 __version__ = "0.0.1"
 
-__all__ = ["PyMMS", "ProductEvent"]
+__all__ = ["PyMMS", "ProductEvent", "MMSError"]
 
 # Initiating logging
-strLevel = os.environ.get("PYMMS_LOGLEVEL", "INFO")
-if hasattr(logging, strLevel):
-    logLevel = getattr(logging, strLevel)
-else:
-    print("Invalid logging level '%s' in environment variable PYMMS_LOGLEVEL" % strLevel)
-    logLevel = logging.INFO
+def _initLogging(logObj):
+    strLevel = os.environ.get("PYMMS_LOGLEVEL", "INFO")
+    if hasattr(logging, strLevel):
+        logLevel = getattr(logging, strLevel)
+    else:
+        print("Invalid logging level '%s' in environment variable PYMMS_LOGLEVEL" % strLevel)
+        logLevel = logging.INFO
 
-if logLevel < logging.INFO:
-    logFormat = "[{asctime:s}] {levelname:8s} {message:}"
-else:
-    logFormat = "{levelname:8s} {message:}"
+    if logLevel < logging.INFO:
+        logFormat = "[{asctime:s}] {levelname:8s} {message:}"
+    else:
+        logFormat = "{levelname:8s} {message:}"
 
-logging.basicConfig(format=logFormat, style="{", level=logLevel)
+    logFmt = logging.Formatter(fmt=logFormat, style="{")
+
+    cHandle = logging.StreamHandler()
+    cHandle.setLevel(logLevel)
+    cHandle.setFormatter(logFmt)
+
+    logObj.setLevel(logLevel)
+    logObj.addHandler(cHandle)
+
+    return
+
+# Logging Setup
 logger = logging.getLogger(__name__)
+_initLogging(logger)
 
 # Initialise Config
 _CONFIG.initConfig()
