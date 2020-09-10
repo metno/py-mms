@@ -8,25 +8,29 @@ from pymms import ProductEvent
 
 @pytest.mark.events
 def testCreateProductEvent():
-    pEvent = ProductEvent("FirstA", "FirstB", "FirstC")
+    pEvent = ProductEvent(
+        product="FirstA",
+        productionHub="FirstB",
+        productLocation="FirstC"
+    )
 
     assert pEvent.product == "FirstA"
-    assert pEvent.productSlug == "FirstB"
-    assert pEvent.productionHub == "FirstC"
+    assert pEvent.productionHub == "FirstB"
+    assert pEvent.productLocation == "FirstC"
 
     with pytest.raises(ValueError):
         pEvent.product = 0
 
     with pytest.raises(ValueError):
-        pEvent.productSlug = 1
+        pEvent.productionHub = 1
 
     with pytest.raises(ValueError):
-        pEvent.productionHub = 2
+        pEvent.productLocation = 2
 
     pEvent.product = "SecondA"
-    pEvent.productSlug = "SecondB"
-    pEvent.productionHub = "SecondC"
+    pEvent.productionHub = "SecondB"
+    pEvent.productLocation = "SecondC"
 
     assert pEvent.product == "SecondA"
-    assert pEvent.productSlug == "SecondB"
-    assert pEvent.productionHub == "SecondC"
+    assert pEvent.productionHub == "SecondB"
+    assert pEvent.productLocation == "SecondC"
