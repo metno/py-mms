@@ -4,7 +4,7 @@
 
 import pytest
 
-from pymms import ProductEvent
+from pymms import ProductEvent, MMSError
 
 @pytest.mark.events
 def testCreateProductEvent():
@@ -34,3 +34,20 @@ def testCreateProductEvent():
     assert pEvent.product == "SecondA"
     assert pEvent.productionHub == "SecondB"
     assert pEvent.productLocation == "SecondC"
+
+@pytest.mark.events
+def testSendProductEvent():
+    # Valid Event
+    pEvent = ProductEvent(
+        product="Test",
+        productionHub="test-hub",
+        productLocation="/tmp"
+    )
+    retData = pEvent.send()
+    assert not retData["err"]
+    assert not retData["errmsg"]
+
+    # Invalid Event
+    pEvent.productionHub = "no-such-hub"
+    with pytest.raises(MMSError):
+        retData = pEvent.send()

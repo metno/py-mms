@@ -62,9 +62,6 @@ class GoMMS():
         else:
             raise MMSError("Invalid return data from libmms.so")
 
-        # print("Python received message:")
-        # print(retDict)
-
         return retDict
 
     def sayHello(self):
