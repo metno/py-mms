@@ -29,14 +29,14 @@ class ProductEvent():
     """Wrapper class for the go-mms product event.
     """
 
-    def __init__(self, product="", productSlug="", productionHub=""):
+    def __init__(self, product="", productionHub="", productLocation=""):
 
         self._goMMS = GoMMS()
 
         # Event properties
         self._eventProduct = product
-        self._eventProductSlug = productSlug
         self._eventProductionHub = productionHub
+        self._eventProductLocation = productLocation
 
         return
 
@@ -49,12 +49,12 @@ class ProductEvent():
         return self._eventProduct
 
     @property
-    def productSlug(self):
-        return self._eventProductSlug
-
-    @property
     def productionHub(self):
         return self._eventProductionHub
+
+    @property
+    def productLocation(self):
+        return self._eventProductLocation
 
     ##
     #  Setters
@@ -69,15 +69,6 @@ class ProductEvent():
             raise ValueError("ProductEvent.product must be a string")
         return
 
-    @productSlug.setter
-    def productSlug(self, value):
-        if isinstance(value, str):
-            self._eventProductSlug = value
-        else:
-            self._eventProductSlug = ""
-            raise ValueError("ProductEvent.productSlug must be a string")
-        return
-
     @productionHub.setter
     def productionHub(self, value):
         if isinstance(value, str):
@@ -85,6 +76,15 @@ class ProductEvent():
         else:
             self._eventProductionHub = ""
             raise ValueError("ProductEvent.productionHub must be a string")
+        return
+
+    @productLocation.setter
+    def productLocation(self, value):
+        if isinstance(value, str):
+            self._eventProductLocation = value
+        else:
+            self._eventProductLocation = ""
+            raise ValueError("ProductEvent.productLocation must be a string")
         return
 
     ##
@@ -97,8 +97,8 @@ class ProductEvent():
         """
         retData = self._goMMS.productEvent(
             product=self._eventProduct,
-            productSlug=self._eventProductSlug,
-            productionHub=self._eventProductionHub
+            productionHub=self._eventProductionHub,
+            productLocation=self._eventProductLocation
         )
         return retData
 

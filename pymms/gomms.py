@@ -43,13 +43,13 @@ class GoMMS():
 
         return
 
-    def productEvent(self, product, productSlug, productionHub):
+    def productEvent(self, product, productionHub, productLocation):
         """Post an event to the MMS client.
         """
         payLoad = json.dumps({
-            "Product":       str(product),
-            "ProductSlug":   str(productSlug),
-            "ProductionHub": str(productionHub),
+            "Product":         str(product),
+            "ProductionHub":   str(productionHub),
+            "ProductLocation": str(productLocation),
         })
         self.goLib.PyProductEvent.restype = ctypes.c_char_p
         retData = self.goLib.PyProductEvent(payLoad.encode()).decode()
@@ -61,9 +61,6 @@ class GoMMS():
                 raise MMSError("\n%s" % errMsg.strip())
         else:
             raise MMSError("Invalid return data from libmms.so")
-
-        # print("Python received message:")
-        # print(retDict)
 
         return retDict
 
