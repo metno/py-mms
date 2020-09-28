@@ -20,8 +20,10 @@
 """
 
 import logging
+import json
 
 from .gomms import GoMMS
+from .exceptions import MMSError
 
 logger = logging.getLogger(__name__)
 
@@ -95,11 +97,21 @@ class ProductEvent():
         """Bundle the event data and send to the GoMMS library. Returns
         a dictionary of the response from go-mms.
         """
-        retData = self._goMMS.productEvent(
-            product=self._eventProduct,
-            productionHub=self._eventProductionHub,
-            productLocation=self._eventProductLocation
-        )
-        return retData
+        payLoad = json.dumps({
+            "Product":         str(self._eventProduct),
+            "ProductionHub":   str(self._eventProductionHub),
+            "ProductLocation": str(self._eventProductLocation),
+        })
+        retData = self._goMMS.productEvent(payLoad)
+        retDict = json.loads(retData)
+
+        if "err" in retDict and "errmsg" in retDict:
+            if retDict["err"]:
+                errMsg = retDict["errmsg"].replace(": ", ":\n")
+                raise MMSError("\n%s" % errMsg.strip())
+        else:
+            raise MMSError("Invalid return data from libmms.so")
+
+        return retDict
 
 # END Class ProductEvent

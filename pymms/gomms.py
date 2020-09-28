@@ -19,14 +19,12 @@
  limitations under the License.
 """
 
-import json
 import ctypes
 import logging
 
 from os import path
 
 from . import _CONFIG
-from .exceptions import MMSError
 
 logger = logging.getLogger(__name__)
 
@@ -43,26 +41,11 @@ class GoMMS():
 
         return
 
-    def productEvent(self, product, productionHub, productLocation):
+    def productEvent(self, payLoad):
         """Post an event to the MMS client.
         """
-        payLoad = json.dumps({
-            "Product":         str(product),
-            "ProductionHub":   str(productionHub),
-            "ProductLocation": str(productLocation),
-        })
         self.goLib.PyProductEvent.restype = ctypes.c_char_p
-        retData = self.goLib.PyProductEvent(payLoad.encode()).decode()
-        retDict = json.loads(retData)
-
-        if "err" in retDict and "errmsg" in retDict:
-            if retDict["err"]:
-                errMsg = retDict["errmsg"].replace(": ", ":\n")
-                raise MMSError("\n%s" % errMsg.strip())
-        else:
-            raise MMSError("Invalid return data from libmms.so")
-
-        return retDict
+        return self.goLib.PyProductEvent(payLoad.encode()).decode()
 
     def sayHello(self):
         """Function to check that the interface to the go-mms client is
