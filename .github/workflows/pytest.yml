@@ -38,7 +38,7 @@ jobs:
     needs: pyTestCov
     strategy:
       matrix:
-        python-version: [3.5, 3.6, 3.7]
+        python-version: [3.5, 3.6, 3.7, 3.9]
     runs-on: ubuntu-latest
     steps:
       - name: Python Setup
