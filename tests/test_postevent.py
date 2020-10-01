@@ -5,6 +5,7 @@
 import pytest
 
 from pymms import ProductEvent, MMSError
+from pymms.gomms import GoMMS
 
 @pytest.mark.events
 def testCreateProductEvent():
@@ -36,7 +37,7 @@ def testCreateProductEvent():
     assert pEvent.productLocation == "SecondC"
 
 @pytest.mark.events
-def testSendProductEvent():
+def testSendProductEvent(monkeypatch):
     # Valid Event
     pEvent = ProductEvent(
         product="Test",
@@ -49,5 +50,10 @@ def testSendProductEvent():
 
     # Invalid Event
     pEvent.productionHub = "no-such-hub"
+    with pytest.raises(MMSError):
+        retData = pEvent.send()
+
+    # Invalid Return
+    monkeypatch.setattr(GoMMS, "productEvent", lambda self, payLoad: r"{}")
     with pytest.raises(MMSError):
         retData = pEvent.send()
