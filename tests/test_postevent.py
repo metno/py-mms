@@ -5,7 +5,7 @@
 import pytest
 
 from urllib import request
-from pymms import ProductEvent, MMSError
+from pymms import ProductEvent
 
 @pytest.mark.events
 def testCreateProductEvent():
