@@ -25,7 +25,6 @@ import json
 from urllib import request, error
 from datetime import datetime, timedelta
 
-from .gomms import GoMMS
 from .exceptions import MMSError
 
 logger = logging.getLogger(__name__)
@@ -37,8 +36,6 @@ class ProductEvent():
     def __init__(
         self, jobName="", product="", productionHub="", productLocation="", eventInterval=0
     ):
-
-        self._goMMS = GoMMS()
 
         # Event properties
         self._eventJobName = jobName
@@ -127,27 +124,6 @@ class ProductEvent():
     ##
 
     def send(self):
-        """Bundle the event data and send to the GoMMS library. Returns
-        a dictionary of the response from go-mms.
-        """
-        payLoad = json.dumps({
-            "Product":         str(self._eventProduct),
-            "ProductionHub":   str(self._eventProductionHub),
-            "ProductLocation": str(self._eventProductLocation),
-        })
-        retData = self._goMMS.productEvent(payLoad)
-        retDict = json.loads(retData)
-
-        if "err" in retDict and "errmsg" in retDict:
-            if retDict["err"]:
-                errMsg = retDict["errmsg"].replace(": ", ":\n")
-                raise MMSError("\n%s" % errMsg.strip())
-        else:
-            raise MMSError("Invalid return data from libmms.so")
-
-        return retDict
-
-    def sendHTTP(self):
         """Send the event data to the MMSd API.
         """
         nowTime = datetime.now().astimezone()
@@ -173,8 +149,10 @@ class ProductEvent():
             httpResp = request.urlopen(httpReq)
         except error.HTTPError as hErr:
             logger.error(str(hErr))
+            raise MMSError
         except error.URLError as uErr:
             logger.error(str(uErr))
+            raise MMSError
 
         return httpResp
 

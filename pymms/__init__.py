@@ -28,14 +28,13 @@ from .config import Config
 # depend on the Config object.
 _CONFIG = Config()
 
-from .pymms import PyMMS # noqa: E402
 from .productevent import ProductEvent # noqa: E402
 from .exceptions import MMSError # noqa: E402
 
 __package__ = "pymms"
 __version__ = "0.0.1"
 
-__all__ = ["PyMMS", "ProductEvent", "MMSError"]
+__all__ = ["ProductEvent", "MMSError"]
 
 # Initiating logging
 def _initLogging(logObj):
