@@ -22,7 +22,9 @@
 import logging
 import json
 
-from .gomms import GoMMS
+from urllib import request, error
+from datetime import datetime, timedelta
+
 from .exceptions import MMSError
 
 logger = logging.getLogger(__name__)
@@ -31,20 +33,26 @@ class ProductEvent():
     """Wrapper class for the go-mms product event.
     """
 
-    def __init__(self, product="", productionHub="", productLocation=""):
-
-        self._goMMS = GoMMS()
+    def __init__(
+        self, jobName="", product="", productionHub="", productLocation="", eventInterval=0
+    ):
 
         # Event properties
+        self._eventJobName = jobName
         self._eventProduct = product
         self._eventProductionHub = productionHub
         self._eventProductLocation = productLocation
+        self._eventInterval = eventInterval
 
         return
 
     ##
     #  Getters
     ##
+
+    @property
+    def jobName(self):
+        return self._eventJobName
 
     @property
     def product(self):
@@ -58,9 +66,22 @@ class ProductEvent():
     def productLocation(self):
         return self._eventProductLocation
 
+    @property
+    def eventInterval(self):
+        return self._eventInterval
+
     ##
     #  Setters
     ##
+
+    @jobName.setter
+    def jobName(self, value):
+        if isinstance(value, str):
+            self._eventJobName = value
+        else:
+            self._eventJobName = ""
+            raise ValueError("ProductEvent.jobName must be a string")
+        return
 
     @product.setter
     def product(self, value):
@@ -89,29 +110,50 @@ class ProductEvent():
             raise ValueError("ProductEvent.productLocation must be a string")
         return
 
+    @eventInterval.setter
+    def eventInterval(self, value):
+        if isinstance(value, int):
+            self._eventInterval = value
+        else:
+            self._eventInterval = ""
+            raise ValueError("ProductEvent.eventInterval must be an integer")
+        return
+
     ##
     #  Methods
     ##
 
     def send(self):
-        """Bundle the event data and send to the GoMMS library. Returns
-        a dictionary of the response from go-mms.
+        """Send the event data to the MMSd API.
         """
+        nowTime = datetime.now().astimezone()
+        nextTime = nowTime + timedelta(seconds=self._eventInterval)
+
         payLoad = json.dumps({
+            "JobName":         str(self._eventJobName),
             "Product":         str(self._eventProduct),
             "ProductionHub":   str(self._eventProductionHub),
             "ProductLocation": str(self._eventProductLocation),
+            "CreatedAt":       nowTime.isoformat(),
+            "NextEventAt":     nextTime.isoformat(),
         })
-        retData = self._goMMS.productEvent(payLoad)
-        retDict = json.loads(retData)
 
-        if "err" in retDict and "errmsg" in retDict:
-            if retDict["err"]:
-                errMsg = retDict["errmsg"].replace(": ", ":\n")
-                raise MMSError("\n%s" % errMsg.strip())
-        else:
-            raise MMSError("Invalid return data from libmms.so")
+        apiURL = self._eventProductionHub + "/api/v1/postevent"
+        httpReq = request.Request(apiURL, data=str(payLoad).encode("utf-8"))
 
-        return retDict
+        httpReq.add_header("User-Agent", "Py-MMS (Python script)")
+        httpReq.add_header("Content-Type", "application/json")
+        httpReq.add_header("Api-Key", "APIKEY")
+
+        try:
+            httpResp = request.urlopen(httpReq)
+        except error.HTTPError as hErr:
+            logger.error(str(hErr))
+            raise MMSError
+        except error.URLError as uErr:
+            logger.error(str(uErr))
+            raise MMSError
+
+        return httpResp
 
 # END Class ProductEvent

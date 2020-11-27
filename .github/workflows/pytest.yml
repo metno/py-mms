@@ -10,7 +10,7 @@ jobs:
   pyTestCov:
     strategy:
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
     runs-on: ubuntu-latest
     steps:
       - name: Python Setup
@@ -24,14 +24,14 @@ jobs:
           pip install pytest-cov
       - name: Checkout py-mms
         uses: actions/checkout@v2
-      - name: Build Shared Library
-        run: |
-          git submodule update --init
-          ./makeLib.sh
-      - name: Start mmsd
-        run: |
-          cd pymms/lib/go-mms
-          ../mmsd &
+      # - name: Build Shared Library
+      #   run: |
+      #     git submodule update --init
+      #     ./makeLib.sh
+      # - name: Start mmsd
+      #   run: |
+      #     cd pymms/lib/go-mms
+      #     ../mmsd &
       - name: Run Tests
         run: pytest -v --cov=pymms
       - name: Upload to Codecov

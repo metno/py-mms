@@ -6,7 +6,7 @@ import os
 import pytest
 import logging
 
-from pymms import PyMMS, _initLogging
+from pymms import _initLogging
 
 @pytest.mark.core
 def testInitLogging():
@@ -19,14 +19,3 @@ def testInitLogging():
     logger = logging.getLogger(__name__)
     _initLogging(logger)
     assert logger.getEffectiveLevel() == logging.INFO
-
-@pytest.mark.core
-def testConfigInit():
-    tObj = PyMMS()
-    assert tObj.helloWorld()
-
-@pytest.mark.core
-def testGoInterface():
-    tObj = PyMMS()
-    assert tObj.goMMS.sayHello() == "Hello Python!"
-    # assert False

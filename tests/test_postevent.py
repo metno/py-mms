@@ -4,20 +4,27 @@
 
 import pytest
 
-from pymms import ProductEvent, MMSError
-from pymms.gomms import GoMMS
+from urllib import request
+from pymms import ProductEvent
 
 @pytest.mark.events
 def testCreateProductEvent():
     pEvent = ProductEvent(
-        product="FirstA",
-        productionHub="FirstB",
-        productLocation="FirstC"
+        jobName="FirstA",
+        product="FirstB",
+        productionHub="FirstC",
+        productLocation="FirstD",
+        eventInterval=42,
     )
 
-    assert pEvent.product == "FirstA"
-    assert pEvent.productionHub == "FirstB"
-    assert pEvent.productLocation == "FirstC"
+    assert pEvent.jobName == "FirstA"
+    assert pEvent.product == "FirstB"
+    assert pEvent.productionHub == "FirstC"
+    assert pEvent.productLocation == "FirstD"
+    assert pEvent.eventInterval == 42
+
+    with pytest.raises(ValueError):
+        pEvent.jobName = 0
 
     with pytest.raises(ValueError):
         pEvent.product = 0
@@ -28,32 +35,40 @@ def testCreateProductEvent():
     with pytest.raises(ValueError):
         pEvent.productLocation = 2
 
-    pEvent.product = "SecondA"
-    pEvent.productionHub = "SecondB"
-    pEvent.productLocation = "SecondC"
+    with pytest.raises(ValueError):
+        pEvent.eventInterval = "2"
 
-    assert pEvent.product == "SecondA"
-    assert pEvent.productionHub == "SecondB"
-    assert pEvent.productLocation == "SecondC"
+    pEvent.jobName = "SecondA"
+    pEvent.product = "SecondB"
+    pEvent.productionHub = "SecondC"
+    pEvent.productLocation = "SecondD"
+    pEvent.eventInterval = 43
+
+    assert pEvent.jobName == "SecondA"
+    assert pEvent.product == "SecondB"
+    assert pEvent.productionHub == "SecondC"
+    assert pEvent.productLocation == "SecondD"
+    assert pEvent.eventInterval == 43
 
 @pytest.mark.events
 def testSendProductEvent(monkeypatch):
     # Valid Event
     pEvent = ProductEvent(
-        product="Test",
-        productionHub="test-hub",
-        productLocation="/tmp"
+        jobName="TestJob",
+        product="TestProduct",
+        productionHub="http://localhost:8080",
+        productLocation="/tmp",
+        eventInterval=3600,
     )
-    retData = pEvent.send()
-    assert not retData["err"]
-    assert not retData["errmsg"]
+    monkeypatch.setattr(request, "urlopen", lambda *args, **kwargs: None)
+    assert pEvent.send() is None
 
-    # Invalid Event
+    # Invalid Hub
     pEvent.productionHub = "no-such-hub"
-    with pytest.raises(MMSError):
-        retData = pEvent.send()
+    with pytest.raises(ValueError):
+        pEvent.send()
 
     # Invalid Return
-    monkeypatch.setattr(GoMMS, "productEvent", lambda self, payLoad: r"{}")
-    with pytest.raises(MMSError):
-        retData = pEvent.send()
+    # monkeypatch.setattr(GoMMS, "productEvent", lambda self, payLoad: r"{}")
+    # with pytest.raises(MMSError):
+    #     retData = pEvent.send()

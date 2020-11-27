@@ -33,7 +33,6 @@ class Config():
     def __init__(self):
 
         self.pkgPath = None
-        self.libPath = None
 
         return
 
@@ -41,10 +40,8 @@ class Config():
         """Initialise the config variables.
         """
         self.pkgPath = getattr(sys, "_MEIPASS", path.abspath(path.dirname(__file__)))
-        self.libPath = path.join(self.pkgPath, "lib")
 
         logger.debug("Package path is %s" % self.pkgPath)
-        logger.debug("Library path is %s" % self.libPath)
 
         return
 

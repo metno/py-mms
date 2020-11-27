@@ -6,20 +6,6 @@
 
 Python client for MET Messaging System (MMS).
 
-## Clone and Build
-
-To use the `py-mms` package from source, please run the following:
-```bash
-git clone https://github.com/metno/py-mms
-cd py-mms
-git submodule update --init
-./makeLib.sh
-```
-
-This will clone the `py-mms` repository, with the `go-mms` repository as a submodule.
-The `makeLib.sh` script builds a shared library version of the `go-mms` tool.
-This is required for the `py-mms` package to work.
-
 ## How to Use
 
 Currently, `py-mms` only contains a wrapper for sending MMS product events via the `go-mms` tool.
@@ -28,9 +14,11 @@ Here's a usage example:
 from pymms import ProductEvent, MMSError
 
 pEvent = ProductEvent(
+    jobName="Job",
     product="Test",
-    productionHub="test-hub",
-    productLocation="/tmp"
+    productionHub="http://localhost:8080",
+    productLocation="/tmp",
+    eventInterval=3600
 )
 
 try:
