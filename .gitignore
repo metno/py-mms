@@ -7,9 +7,3 @@ __pycache__
 .coverage
 htmlcov/
 tests/temp/
-
-# Go
-/pymms/lib/lib*.h
-/pymms/lib/lib*.so
-/pymms/lib/mms
-/pymms/lib/mmsd
