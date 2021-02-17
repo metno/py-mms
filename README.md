@@ -6,6 +6,8 @@
 
 Python client for MET Messaging System (MMS).
 
+The client requires Python >= 3.6.
+
 ## How to Use
 
 Currently, `py-mms` only contains a wrapper for sending MMS product events to the `go-mms` API.
