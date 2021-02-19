@@ -137,7 +137,7 @@ class ProductEvent():
             "NextEventAt":     nextTime.isoformat(),
         })
 
-        apiURL = self._eventProductionHub + "/api/v1/postevent"
+        apiURL = self._eventProductionHub + "/api/v1/events"
         httpReq = request.Request(apiURL, data=str(payLoad).encode("utf-8"))
 
         httpReq.add_header("User-Agent", "Py-MMS (Python script)")
