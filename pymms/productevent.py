@@ -33,7 +33,8 @@ class ProductEvent():
     """
 
     def __init__(
-        self, jobName="", product="", productionHub="", productLocation="", refTime="", eventInterval=0, counter=1, totalCount=1
+        self, jobName="", product="", productionHub="", productLocation="", refTime="",
+        eventInterval=0, counter=1, totalCount=1
     ):
 
         # Event properties
@@ -133,7 +134,7 @@ class ProductEvent():
             raise ValueError("ProductEvent.eventInterval must be an integer")
         return
 
-    @product.setter
+    @refTime.setter
     def refTime(self, value):
         if isinstance(value, str):
             self._refTime = value
