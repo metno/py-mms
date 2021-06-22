@@ -54,11 +54,14 @@ def testCreateProductEvent():
 def testSendProductEvent(monkeypatch):
     # Valid Event
     pEvent = ProductEvent(
+        eventInterval=3600,
         jobName="TestJob",
         product="TestProduct",
         productionHub="http://localhost:8080",
-        productLocation="/tmp",
-        eventInterval=3600,
+        productLocation="/tmp/testproduct.ext",
+        refTime="2021-06-22T12:00:00Z",
+        counter=1,
+        totalCount=1,
     )
     monkeypatch.setattr(request, "urlopen", lambda *args, **kwargs: None)
     assert pEvent.send() is None

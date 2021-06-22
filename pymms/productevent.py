@@ -33,7 +33,7 @@ class ProductEvent():
     """
 
     def __init__(
-        self, jobName="", product="", productionHub="", productLocation="", eventInterval=0
+        self, jobName="", product="", productionHub="", productLocation="", refTime="", eventInterval=0, counter=1, totalCount=1
     ):
 
         # Event properties
@@ -42,6 +42,9 @@ class ProductEvent():
         self._eventProductionHub = productionHub
         self._eventProductLocation = productLocation
         self._eventInterval = eventInterval
+        self._refTime = refTime
+        self._counter = counter
+        self._totalCount = totalCount
 
         return
 
@@ -68,6 +71,18 @@ class ProductEvent():
     @property
     def eventInterval(self):
         return self._eventInterval
+
+    @property
+    def refTime(self):
+        return self._refTime
+
+    @property
+    def counter(self):
+        return self._counter
+
+    @property
+    def totalCount(self):
+        return self._totalCount
 
     ##
     #  Setters
@@ -118,6 +133,33 @@ class ProductEvent():
             raise ValueError("ProductEvent.eventInterval must be an integer")
         return
 
+    @product.setter
+    def refTime(self, value):
+        if isinstance(value, str):
+            self._refTime = value
+        else:
+            self._refTime = ""
+            raise ValueError("ProductEvent.refTime must be a string")
+        return
+
+    @counter.setter
+    def counter(self, value):
+        if isinstance(value, int):
+            self._counter = value
+        else:
+            self._counter = ""
+            raise ValueError("ProductEvent.eventInterval must be an integer")
+        return
+
+    @totalCount.setter
+    def totalCount(self, value):
+        if isinstance(value, int):
+            self._totalCount = value
+        else:
+            self._totalCount = ""
+            raise ValueError("ProductEvent.eventInterval must be an integer")
+        return
+
     ##
     #  Methods
     ##
@@ -135,6 +177,9 @@ class ProductEvent():
             "ProductLocation": str(self._eventProductLocation),
             "CreatedAt":       nowTime.isoformat(),
             "NextEventAt":     nextTime.isoformat(),
+            "RefTime":         str(self._refTime),
+            "Counter":         str(self.counter),
+            "TotalCount":      str(self.totalCount)
         })
 
         apiURL = self._eventProductionHub + "/api/v1/events"
