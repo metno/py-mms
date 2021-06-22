@@ -2,7 +2,6 @@
 """Post event object tests.
 """
 
-from typing import Counter
 import pytest
 
 from urllib import request
