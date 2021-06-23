@@ -2,13 +2,17 @@
 """Post event object tests.
 """
 
+import urllib
 import pytest
 
 from urllib import request
-from pymms import ProductEvent
+from pymms import ProductEvent, MMSError
 
 @pytest.mark.events
 def testCreateProductEvent():
+    """Test creating a product event and setting all the properties
+    with incorrect and correct datatype.
+    """
     pEvent = ProductEvent(
         jobName="FirstA",
         product="FirstB",
@@ -71,8 +75,12 @@ def testCreateProductEvent():
     assert pEvent.counter == 2
     assert pEvent.totalCount == 3
 
+# END Test testCreateProductEvent
+
 @pytest.mark.events
-def testSendProductEvent(monkeypatch):
+def testSendProductEvent(monkeypatch, caplog):
+    """Test sending a product event.
+    """
     # Valid Event
     pEvent = ProductEvent(
         eventInterval=3600,
@@ -84,15 +92,37 @@ def testSendProductEvent(monkeypatch):
         counter=1,
         totalCount=1,
     )
-    monkeypatch.setattr(request, "urlopen", lambda *args, **kwargs: None)
-    assert pEvent.send() is None
+
+    with monkeypatch.context() as mp:
+        mp.setattr(request, "urlopen", lambda *a, **k: None)
+        assert pEvent.send() is None
+
+    # Mock Errors
+    def urlErrRequest(*a, **k):
+        raise urllib.error.URLError("URLError")
+
+    caplog.clear()
+    with monkeypatch.context() as mp:
+        mp.setattr(request, "urlopen", urlErrRequest)
+        with pytest.raises(MMSError):
+            pEvent.send()
+
+    assert "URLError" in caplog.text
+
+    def httpErrRequest(*a, **k):
+        raise urllib.error.HTTPError("http://localhost:8080", 500, "HTTPError", "", "")
+
+    caplog.clear()
+    with monkeypatch.context() as mp:
+        mp.setattr(request, "urlopen", httpErrRequest)
+        with pytest.raises(MMSError):
+            pEvent.send()
+
+    assert "HTTPError" in caplog.text
 
     # Invalid Hub
     pEvent.productionHub = "no-such-hub"
     with pytest.raises(ValueError):
         pEvent.send()
 
-    # Invalid Return
-    # monkeypatch.setattr(GoMMS, "productEvent", lambda self, payLoad: r"{}")
-    # with pytest.raises(MMSError):
-    #     retData = pEvent.send()
+# END Test testSendProductEvent
