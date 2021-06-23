@@ -20,6 +20,7 @@ limitations under the License.
 
 import logging
 import json
+import os
 
 from urllib import request, error
 from datetime import datetime, timedelta
@@ -188,7 +189,7 @@ class ProductEvent():
 
         httpReq.add_header("User-Agent", "Py-MMS (Python script)")
         httpReq.add_header("Content-Type", "application/json")
-        httpReq.add_header("Api-Key", "APIKEY")
+        httpReq.add_header("Api-Key", os.environ.get("MMS_API_KEY", ""))
 
         try:
             httpResp = request.urlopen(httpReq)
