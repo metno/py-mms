@@ -179,8 +179,8 @@ class ProductEvent():
             "CreatedAt":       nowTime.isoformat(),
             "NextEventAt":     nextTime.isoformat(),
             "RefTime":         str(self._refTime),
-            "Counter":         str(self.counter),
-            "TotalCount":      str(self.totalCount)
+            "Counter":         self.counter,
+            "TotalCount":      self.totalCount
         })
 
         apiURL = self._eventProductionHub + "/api/v1/events"
