@@ -9,6 +9,7 @@ Python client for MET Messaging System (MMS).
 The client requires Python >= 3.6.
 
 ## How to Use
+Make sure that the `MMS_API_KEY` environment variable is set correctly with a key generated at the MMSD side.
 
 Currently, `py-mms` only contains a wrapper for sending MMS product events to the `go-mms` API.
 
@@ -21,7 +22,10 @@ pEvent = ProductEvent(
     product="Test",
     productionHub="http://localhost:8080",
     productLocation="/tmp",
-    eventInterval=3600
+    eventInterval=3600,
+    refTime="2021-06-22T12:00:00Z",
+    counter=1,
+    totalCount=1
 )
 
 try:
