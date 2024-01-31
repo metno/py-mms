@@ -171,14 +171,13 @@ class ProductEvent():
         """
         nowTime = datetime.now().astimezone()
         nextTime = nowTime + timedelta(seconds=self._eventInterval)
-
         payLoad = json.dumps({
             "JobName":         str(self._eventJobName),
             "Product":         str(self._eventProduct),
             "ProductionHub":   str(self._eventProductionHub),
             "ProductLocation": str(self._eventProductLocation),
-            "CreatedAt":       nowTime.isoformat(),
-            "NextEventAt":     nextTime.isoformat(),
+            "CreatedAt":       nowTime.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            "NextEventAt":     nextTime.strftime('%Y-%m-%dT%H:%M:%SZ'),
             "RefTime":         str(self._refTime),
             "Counter":         self.counter,
             "TotalCount":      self.totalCount
